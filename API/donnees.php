@@ -35,7 +35,7 @@
     function getIncident() {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT id_incident,resume,description,service_technique
+            $maRequete='SELECT id_incident,resume,description,service_technique
                                 ,incident.id_reservation,intitule,reservation.date_reservation,
                                 reservation.heure_debut,reservation.heure_fin, salle.nom,
                                 incident.date_signalement,incident.heure_signalement
