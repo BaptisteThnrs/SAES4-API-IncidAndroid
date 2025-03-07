@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+/jsLibraryMappings.xml
+/modules.xml
+/StatiSalle_SAE-S3_WEB.iml
+/vcs.xml
+/php-docker-settings.xml
+/php.xml
