@@ -5,7 +5,7 @@
     function getReservation() {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT reservation.id_reservation as id_reservation, salle.nom as nom_salle, employe.nom as nom_employe,
+            $maRequete='SELECT reservation.id_reservation as id_reservation, salle.nom as nom_salle, employe.nom as nom_employe,
                         employe.prenom as prenom_employe, activite.nom_activite as nom_activite, reservation.date_reservation 
                         as date, reservation.heure_debut as heure_debut, reservation.heure_fin as heure_fin, reservation.id_employe as id_employe
                         FROM reservation
@@ -16,7 +16,7 @@
                         JOIN activite
                         ON reservation.id_activite = activite.id_activite
                         ORDER BY date DESC';
-            $stmt = $pdo->prepare($maReqete);
+            $stmt = $pdo->prepare($maRequete);
             $stmt->execute();
 
             $reservations=$stmt->fetchALL();
@@ -65,7 +65,7 @@
     function putIncident() {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT';
+            $maRequete='SELECT';
         }catch(PDOException $e){
 			$infos['Statut']="KO";
 			$infos['message']=$e->getMessage();
@@ -119,7 +119,7 @@
     function getIncidentPourUneReservation($idReservation) {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT id_incident,resume,description,service_technique
+            $maRequete='SELECT id_incident,resume,description,service_technique
                                 ,incident.id_reservation,intitule,reservation.date_reservation,
                                 reservation.heure_debut,reservation.heure_fin, salle.nom,
                                 incident.date_signalement,incident.heure_signalement

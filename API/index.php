@@ -11,9 +11,9 @@
 				
 				switch($url[0]) {
 					case 'toutesReservations' :
-						affichageReservation();
+						getReservation();
 					    break;
-                    case 'TousIncidents' :
+                    case 'tousIncidents' :
 						getIncident();
 					    break;
                     default : 
