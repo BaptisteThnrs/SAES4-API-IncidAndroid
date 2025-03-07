@@ -1,5 +1,5 @@
 <?php
-    include 'liaisonBD.php';
+    include '../fonction/liaisonBD.php';
     $pdo = connecteBD();
 
     function getReservation() {
