@@ -73,13 +73,46 @@
 		}
     }
     function postIncident() {
-        try {
-            $pdo=connecteBD();
-            $maReqete='SELECT';
-        }catch(PDOException $e){
+        if(!empty($donneesJson['RESUME'])
+			&& !empty($donneesJson['SERVICE_TECHNIQUE']) 
+			&& !empty($donneesJson['ID_GRAVITE'])
+			&& !empty($donneesJson['ID_RESERVATION'])
+		  ){
+			  // Données remplies, on insère dans la table client
+			try {
+				$pdo=getPDO();
+				$maRequete='INSERT INTO incident(RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, DATE_SIGNALEMENT, HEURE_SIGNALEMENT) 
+                            VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, CURDATE(), CURTIME())';
+				$stmt = $pdo->prepare($maRequete);						// Préparation de la requête
+				$stmt->bindParam("RESUME", $donneesJson['RESUME']);				
+				$stmt->bindParam("DESCRIPTION", $donneesJson['DESCRIPTION']);
+				$stmt->bindParam("SERVICE_TECHNIQUE", $donneesJson['SERVICE_TECHNIQUE']);
+				$stmt->bindParam("ID_GRAVITE", $donneesJson['ID_GRAVITE']);
+				$stmt->bindParam("ID_RESERVATION", $donneesJson['ID_RESERVATION']);
+				$stmt->execute();	
+				
+				$IdInsere=$pdo->lastInsertId() ;
+					
+				$stmt=null;
+				$pdo=null;
+				
+				// Retour des informations au client (statut + id créé)
+				$infos['Statut']="OK";
+				$infos['ID']=$IdInsere;
+
+				sendJSON($infos, 201) ;
+			} catch(PDOException $e){
+				// Retour des informations au client 
+				$infos['Statut']="KO";
+				$infos['message']=$e->getMessage();
+
+				sendJSON($infos, 500) ;
+			}
+		} else {
+			// Données manquantes, Retour des informations au client 
 			$infos['Statut']="KO";
-			$infos['message']=$e->getMessage();
-			sendJSON($infos, 500) ;
+			$infos['message']="Données incomplètes";
+			sendJSON($infos, 400) ;
 		}
     }
 
