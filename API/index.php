@@ -10,12 +10,29 @@
 				$url = explode("/", filter_var($_GET['demande'],FILTER_SANITIZE_URL));
 				
 				switch($url[0]) {
-					case 'toutesReservations' :
-						getReservation();
-					    break;
-                    case 'tousIncidents' :
+					case 'toutesReservations' : // http://localhost/web/StatiSalle/API/index.php?demande=toutesReservations/E000001
+						if (!empty($url[1])) {
+							$idEmploye = $url[1];
+							getReservation($idEmploye);
+						} else {
+							$infos['Statut']="KO";
+							$infos['message']=$url[0]." employé pas trouvé";
+							sendJSON($infos, 404) ;
+						}
+					break;
+                    case 'tousIncidents' : // http://localhost/web/StatiSalle/API/index.php?demande=tousIncidents
 						getIncident();
-					    break;
+					break;
+					case 'unIncident' : // http://localhost/web/StatiSalle/API/index.php?demande=unIncident/1
+						if (!empty($url[1])) {
+							$idReservation = $url[1];
+							getIncidentPourUneReservation($idReservation);
+						} else {
+							$infos['Statut']="KO";
+							$infos['message']=$url[0]." résérvation pas trouvé";
+							sendJSON($infos, 404) ;
+						}
+					break;
                     default : 
 						$infos['Statut']="KO";
 						$infos['message']=$url[0]." inexistant";
@@ -27,40 +44,45 @@
 				sendJSON($infos, 404) ;
 			}
         break;
-        case "POST" :
-            if (!empty($_GET['demande'])) {
-				// décomposition URL par les / et  FILTER_SANITIZE_URL-> Supprime les caractères illégaux des URL
-				$url = explode("/", filter_var($_GET['demande'],FILTER_SANITIZE_URL));
-				
-				if ($url[0] === 'ajoutIncident' && !empty($url[1]) && !empty($url[2]) && !empty($url[3]) && !empty($url[4]) && !empty($url[5])) {
-                    // récupération des parametre dans l'url
-					$resume = $url[1];
-					$description = $url[2];
-					$serviceTechnique = $url[3];
-					$idGravite = $url[4];
-					$idReservation = $url[5];
-				}
-			} else {
-				$infos['Statut']="KO";
-				$infos['message']="URL non valide";
-				sendJSON($infos, 404) ;
-			}
-
-            $stmt = postIncident($resume, $description, $serviceTechnique, $idGravite, $idReservation);
+        case "POST":
+			if (!empty($_GET['demande'])) {
+				// Décomposition de l'URL
+				$url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
 		
-            if ($stmt->rowCount() > 0) {
-                $infos['Statut'] = "OK";
-                $infos['message'] = "incident ajouté avec succès";
-                sendJSON($infos, 201);
-            } else {
-                $infos['Statut'] = "KO";
-                $infos['message'] = "Erreur lors de l'ajout de l'incident";
-                sendJSON($infos, 404);
-            }
+				if ($url[0] === 'ajoutIncident') {
+					// Récupération des données JSON envoyées dans la requête POST
+					$inputJSON = file_get_contents("php://input");
+					$donneesJson = json_decode($inputJSON, true);
+		
+					if ($donneesJson === null) {
+						$infos['Statut'] = "KO";
+						$infos['message'] = "Données JSON invalides";
+						sendJSON($infos, 400);
+						exit;
+					}
+		
+					// Appel de la fonction postIncident avec les données JSON
+					postIncident($donneesJson);
 
-        default :
-		$infos['Statut']="KO";
-		$infos['message']="URL non valide";
-		sendJSON($infos, 404);
-    }
+					/*
+					{
+						"RESUME": "Problème de connexion",
+						"DESCRIPTION": "Impossible d'accéder à la plateforme",
+						"SERVICE_TECHNIQUE": 0,
+						"ID_GRAVITE": 2,
+						"ID_RESERVATION": "R000002"
+					}
+					*/
+
+					exit;
+				}
+			}
+		
+			// Si l'URL est invalide
+			$infos['Statut'] = "KO";
+			$infos['message'] = "URL non valide";
+			sendJSON($infos, 404);
+			exit;
+	}	
+		
 ?>

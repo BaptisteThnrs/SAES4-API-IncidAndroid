@@ -2,21 +2,30 @@
     include '../fonction/liaisonBD.php';
     $pdo = connecteBD();
 
-    function getReservation() {
+    function getReservation($idEmploye) {
         try {
             $pdo=connecteBD();
-            $maRequete='SELECT reservation.id_reservation as id_reservation, salle.nom as nom_salle, employe.nom as nom_employe,
-                        employe.prenom as prenom_employe, activite.nom_activite as nom_activite, reservation.date_reservation 
-                        as date, reservation.heure_debut as heure_debut, reservation.heure_fin as heure_fin, reservation.id_employe as id_employe
-                        FROM reservation
-                        JOIN salle
-                        ON reservation.id_salle = salle.id_salle
-                        JOIN employe
-                        ON reservation.id_employe = employe.id_employe
-                        JOIN activite
-                        ON reservation.id_activite = activite.id_activite
-                        ORDER BY date DESC';
+            $maRequete='
+            SELECT  reservation.id_reservation AS id_reservation,
+                    salle.nom AS nom_salle,
+                    employe.nom AS nom_employe,
+                    employe.prenom AS prenom_employe,
+                    activite.nom_activite AS nom_activite,
+                    reservation.date_reservation AS date,
+                    reservation.heure_debut AS heure_debut,
+                    reservation.heure_fin AS heure_fin
+                FROM 
+                    reservation
+                JOIN 
+                    salle ON reservation.id_salle = salle.id_salle
+                JOIN 
+                    employe ON reservation.id_employe = employe.id_employe
+                JOIN 
+                    activite ON reservation.id_activite = activite.id_activite
+                WHERE 
+                    reservation.id_employe = :id_employe';
             $stmt = $pdo->prepare($maRequete);
+            $stmt->bindValue(':id_employe', $idEmploye, PDO::PARAM_INT); // Vérifie que $idEmploye est un entier
             $stmt->execute();
 
             $reservations=$stmt->fetchALL();
@@ -72,15 +81,15 @@
 			sendJSON($infos, 500) ;
 		}
     }
-    function postIncident() {
-        if(!empty($donneesJson['RESUME'])
-			&& !empty($donneesJson['SERVICE_TECHNIQUE']) 
-			&& !empty($donneesJson['ID_GRAVITE'])
-			&& !empty($donneesJson['ID_RESERVATION'])
-		  ){
+    function postIncident($donneesJson) {
+        if (!empty($donneesJson['RESUME'])
+            && isset($donneesJson['SERVICE_TECHNIQUE']) // Remplacer empty() par isset()
+            && !empty($donneesJson['ID_GRAVITE'])
+            && !empty($donneesJson['ID_RESERVATION'])) {
+
 			  // Données remplies, on insère dans la table client
 			try {
-				$pdo=getPDO();
+				$pdo=connecteBD();
 				$maRequete='INSERT INTO incident(RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, DATE_SIGNALEMENT, HEURE_SIGNALEMENT) 
                             VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, CURDATE(), CURTIME())';
 				$stmt = $pdo->prepare($maRequete);						// Préparation de la requête
