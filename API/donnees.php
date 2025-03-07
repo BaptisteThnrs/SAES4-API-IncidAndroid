@@ -65,13 +65,21 @@
     function putIncident() {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT'
-        }
+            $maReqete='SELECT';
+        }catch(PDOException $e){
+			$infos['Statut']="KO";
+			$infos['message']=$e->getMessage();
+			sendJSON($infos, 500) ;
+		}
     }
     function postIncident() {
         try {
             $pdo=connecteBD();
-            $maReqete='SELECT'
-        }
+            $maReqete='SELECT';
+        }catch(PDOException $e){
+			$infos['Statut']="KO";
+			$infos['message']=$e->getMessage();
+			sendJSON($infos, 500) ;
+		}
     }
 ?>
