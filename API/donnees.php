@@ -15,4 +15,16 @@
             $maReqete='SELECT'
         }
     }
+    function putIncident() {
+        try {
+            $pdo=connecteBD();
+            $maReqete='SELECT'
+        }
+    }
+    function postIncident() {
+        try {
+            $pdo=connecteBD();
+            $maReqete='SELECT'
+        }
+    }
 ?>
