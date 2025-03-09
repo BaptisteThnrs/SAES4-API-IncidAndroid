@@ -71,10 +71,25 @@
 			sendJSON($infos, 500) ;
 		}
     }
-    function putIncident() {
+    function putIncident($resume, $description, $service_technique, $id_gravite, $id_incident) {
         try {
             $pdo=connecteBD();
-            $maRequete='SELECT';
+            // changement de la date et heure ?
+            $maRequete='UPDATE incident SET resume = :resume, description = :description, service_technique = :service_technique, id_gravite = :id_gravite WHERE id_incident = :id_incident';
+            $stmt = $pdo->prepare($maRequete);						// Préparation de la requête
+			$stmt->bindParam("resume", $resume);
+			$stmt->bindParam("description", $description);
+			$stmt->bindParam("service_technique", $service_technique);
+			$stmt->bindParam("id_gravite", $id_gravite);
+			$stmt->bindParam("id_incident", $id_incident);
+            $stmt->execute();	
+
+            $stmt=null;
+			$pdo=null;
+				
+            // Retour des informations au client
+            $infos['Statut']="OK";
+            sendJSON($infos, 201) ;
         }catch(PDOException $e){
 			$infos['Statut']="KO";
 			$infos['message']=$e->getMessage();
@@ -83,7 +98,7 @@
     }
     function postIncident($donneesJson) {
         if (!empty($donneesJson['RESUME'])
-            && isset($donneesJson['SERVICE_TECHNIQUE']) // Remplacer empty() par isset()
+            && isset($donneesJson['SERVICE_TECHNIQUE'])
             && !empty($donneesJson['ID_GRAVITE'])
             && !empty($donneesJson['ID_RESERVATION'])) {
 
@@ -109,7 +124,7 @@
 				$infos['Statut']="OK";
 				$infos['ID']=$IdInsere;
 
-				sendJSON($infos, 201) ;
+				sendJSON($infos, 201);
 			} catch(PDOException $e){
 				// Retour des informations au client 
 				$infos['Statut']="KO";

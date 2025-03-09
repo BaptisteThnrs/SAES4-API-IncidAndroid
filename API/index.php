@@ -80,9 +80,38 @@
 		
 			// Si l'URL est invalide
 			$infos['Statut'] = "KO";
-			$infos['message'] = "URL non valide";
+			$infos['message'] = "URL non valide POST";
 			sendJSON($infos, 404);
-			exit;
+			break;
+		case "PUT":
+			if (!empty($_GET['demande'])) {
+				// Décomposition de l'URL
+				$url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+		
+				switch ($url[0]) {
+					case 'modifIncident':
+						if (!empty($url[1])) {
+							$idIncident = $url[1];
+
+							$input = file_get_contents("php://input");
+							$donnees = json_decode($input, true);
+
+							if (!isset($donnees['resume']) || !isset($donnees['service_technique']) || !isset($donnees['id_gravite'])) {
+								$infos['Statut'] = "KO";
+								$infos['message'] = "Données incomplètes";
+								sendJSON($infos, 400);
+							} else {
+								putIncident($donnees['resume'], $donnees['description'], $donnees['service_technique'], $donnees['id_gravite'], $idIncident);
+							}
+						}
+					break;
+				}
+			}
+		// Si l'URL est invalide
+		$infos['Statut'] = "KO";
+		$infos['message'] = "URL non valide PUT";
+		sendJSON($infos, 404);
+		break;
 	}	
 		
 ?>
