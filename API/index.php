@@ -23,10 +23,20 @@
                     case 'tousIncidents' : // http://localhost/web/StatiSalle/API/index.php?demande=tousIncidents
 						getIncident();
 					break;
-					case 'unIncident' : // http://localhost/web/StatiSalle/API/index.php?demande=unIncident/1
+					case 'incidentUneReservation' : // http://localhost/web/StatiSalle/API/index.php?demande=incidentUneReservation/1
 						if (!empty($url[1])) {
 							$idReservation = $url[1];
 							getIncidentPourUneReservation($idReservation);
+						} else {
+							$infos['Statut']="KO";
+							$infos['message']=$url[0]." résérvation pas trouvé";
+							sendJSON($infos, 404) ;
+						}
+					break;
+					case 'InfoUnIncident' : // http://localhost/web/StatiSalle/API/index.php?demande=InfoUnIncident/1
+						if (!empty($url[1])) {
+							$idIncident = $url[1];
+							getInfoUnIncident($idIncident);
 						} else {
 							$infos['Statut']="KO";
 							$infos['message']=$url[0]." résérvation pas trouvé";
