@@ -1,127 +1,113 @@
-<?php 
-	require("json.php");
-	require("donnees.php");
+<?php
+require("json.php");
+require("donnees.php");
 
-    $request_method = $_SERVER["REQUEST_METHOD"];  // GET / POST / DELETE / PUT
-    switch($_SERVER["REQUEST_METHOD"]) {
-		case "GET" :
-            if (!empty($_GET['demande'])) {
-				// décomposition URL par les / et  FILTER_SANITIZE_URL-> Supprime les caractères illégaux des URL
-				$url = explode("/", filter_var($_GET['demande'],FILTER_SANITIZE_URL));
-				
-				switch($url[0]) {
-					case 'toutesReservations' : // http://localhost/web/StatiSalle/API/index.php?demande=toutesReservations/E000001
-						if (!empty($url[1])) {
-							$idEmploye = $url[1];
-							getReservation($idEmploye);
-						} else {
-							$infos['Statut']="KO";
-							$infos['message']=$url[0]." employé pas trouvé";
-							sendJSON($infos, 404) ;
-						}
-					break;
-                    case 'tousIncidents' : // http://localhost/web/StatiSalle/API/index.php?demande=tousIncidents
-						getIncident();
-					break;
-					case 'incidentUneReservation' : // http://localhost/web/StatiSalle/API/index.php?demande=incidentUneReservation/1
-						if (!empty($url[1])) {
-							$idReservation = $url[1];
-							getIncidentPourUneReservation($idReservation);
-						} else {
-							$infos['Statut']="KO";
-							$infos['message']=$url[0]." résérvation pas trouvé";
-							sendJSON($infos, 404) ;
-						}
-					break;
-					case 'InfoUnIncident' : // http://localhost/web/StatiSalle/API/index.php?demande=InfoUnIncident/1
-						if (!empty($url[1])) {
-							$idIncident = $url[1];
-							getInfoUnIncident($idIncident);
-						} else {
-							$infos['Statut']="KO";
-							$infos['message']=$url[0]." résérvation pas trouvé";
-							sendJSON($infos, 404) ;
-						}
-					break;
-                    default : 
-						$infos['Statut']="KO";
-						$infos['message']=$url[0]." inexistant";
-						sendJSON($infos, 404) ;
-				}
-			} else {
-				$infos['Statut']="KO";
-				$infos['message']="URL non valide";
-				sendJSON($infos, 404) ;
-			}
-        break;
-        case "POST":
-			if (!empty($_GET['demande'])) {
-				// Décomposition de l'URL
-				$url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
-		
-				if ($url[0] === 'ajoutIncident') {
-					// Récupération des données JSON envoyées dans la requête POST
-					$inputJSON = file_get_contents("php://input");
-					$donneesJson = json_decode($inputJSON, true);
-		
-					if ($donneesJson === null) {
-						$infos['Statut'] = "KO";
-						$infos['message'] = "Données JSON invalides";
-						sendJSON($infos, 400);
-						exit;
-					}
-		
-					// Appel de la fonction postIncident avec les données JSON
-					postIncident($donneesJson);
+class Api {
+    public function __construct() {
+        $this->requete();
+    }
 
-					/*
-					{
-						"RESUME": "Problème de connexion",
-						"DESCRIPTION": "Impossible d'accéder à la plateforme",
-						"SERVICE_TECHNIQUE": 0,
-						"ID_GRAVITE": 2,
-						"ID_RESERVATION": "R000002"
-					}
-					*/
+    private function requete() {
+        $method_requete = $_SERVER["REQUEST_METHOD"];
+        switch ($method_requete) {
+            case "GET":
+                $this->getRequete();
+                break;
+            case "POST":
+                $this->postRequete();
+                break;
+            case "PUT":
+                $this->putRequete();
+                break;
+            default:
+                $this->sendError("Méthode non supportée", 405);
+        }
+    }
 
-					exit;
-				}
-			}
-		
-			// Si l'URL est invalide
-			$infos['Statut'] = "KO";
-			$infos['message'] = "URL non valide POST";
-			sendJSON($infos, 404);
-			break;
-		case "PUT":
-			if (!empty($_GET['demande'])) {
-				// Décomposition de l'URL
-				$url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
-		
-				switch ($url[0]) {
-					case 'modifIncident':
-						if (!empty($url[1])) {
-							$idIncident = $url[1];
+    private function getRequete() {
+        if (!empty($_GET['demande'])) {
+            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+            
+            switch ($url[0]) {
+                case 'toutesReservations':
+                    if (!empty($url[1])) {
+                        getReservation($url[1]);
+                    } else {
+                        $this->sendError("Employé non trouvé", 404);
+                    }
+                    break;
+                case 'tousIncidents':
+                    getIncident();
+                    break;
+                case 'incidentUneReservation':
+                    if (!empty($url[1])) {
+                        getIncidentPourUneReservation($url[1]);
+                    } else {
+                        $this->sendError("Réservation non trouvée", 404);
+                    }
+                    break;
+                case 'InfoUnIncident':
+                    if (!empty($url[1])) {
+                        getInfoUnIncident($url[1]);
+                    } else {
+                        $this->sendError("Incident non trouvé", 404);
+                    }
+                    break;
+                default:
+                    $this->sendError("Requête inexistant", 404);
+            }
+        } else {
+            $this->sendError("URL non valide", 404);
+        }
+    }
 
-							$input = file_get_contents("php://input");
-							$donnees = json_decode($input, true);
+    private function postRequete() {
+        if (!empty($_GET['demande'])) {
+            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+            
+            if ($url[0] === 'ajoutIncident') {
+                $inputJSON = file_get_contents("php://input");
+                $data = json_decode($inputJSON, true);
+                
+                if ($data === null) {
+                    $this->sendError("Données JSON invalides", 400);
+                }
+                
+                postIncident($data);
+                return;
+            }
+        }
+        
+        $this->sendError("URL non valide POST", 404);
+    }
 
-							if (!isset($donnees['resume']) || !isset($donnees['service_technique']) || !isset($donnees['id_gravite'])) {
-								$infos['Statut'] = "KO";
-								$infos['message'] = "Données incomplètes";
-								sendJSON($infos, 400);
-							} else {
-								putIncident($donnees['resume'], $donnees['description'], $donnees['service_technique'], $donnees['id_gravite'], $idIncident);
-							}
-						}
-					break;
-				}
-			}
-		// Si l'URL est invalide
-		$infos['Statut'] = "KO";
-		$infos['message'] = "URL non valide PUT";
-		sendJSON($infos, 404);
-		break;
-	}	
-		
+    private function putRequete() {
+        if (!empty($_GET['demande'])) {
+            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+            
+            if ($url[0] === 'modifIncident' && !empty($url[1])) {
+                $idIncident = $url[1];
+                $input = file_get_contents("php://input");
+                $data = json_decode($input, true);
+                
+                if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
+                    $this->sendError("Données incomplètes", 400);
+                }
+                
+                putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
+                return;
+            }
+        }
+        
+        $this->sendError("URL non valide PUT", 404);
+    }
+
+    private function sendError($message, $code) {
+        $infos = ["Statut" => "KO", "message" => $message];
+        sendJSON($infos, $code);
+        exit;
+    }
+}
+
+new Api();
 ?>
