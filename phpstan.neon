@@ -1,0 +1,6 @@
+parameters:
+	level: max
+	paths:
+		- API
+	excludePaths:
+	    - statisalle/lib
