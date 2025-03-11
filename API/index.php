@@ -3,7 +3,10 @@ require("json.php");
 require("donnees.php");
 
 class Api {
+    private $donnees;
+
     public function __construct() {
+        $this->donnees = new Donnees();
         $this->requete();
     }
 
@@ -31,24 +34,24 @@ class Api {
             switch ($url[0]) {
                 case 'toutesReservations':
                     if (!empty($url[1])) {
-                        getReservation($url[1]);
+                        $this->donnees->getReservation($url[1]);
                     } else {
                         $this->sendError("Employé non trouvé", 404);
                     }
                     break;
                 case 'tousIncidents':
-                    getIncident();
+                    $this->donnees->getIncident();
                     break;
                 case 'incidentUneReservation':
                     if (!empty($url[1])) {
-                        getIncidentPourUneReservation($url[1]);
+                        $this->donnees->getIncidentPourUneReservation($url[1]);
                     } else {
                         $this->sendError("Réservation non trouvée", 404);
                     }
                     break;
                 case 'InfoUnIncident':
                     if (!empty($url[1])) {
-                        getInfoUnIncident($url[1]);
+                        $this->donnees->getInfoUnIncident($url[1]);
                     } else {
                         $this->sendError("Incident non trouvé", 404);
                     }
@@ -73,7 +76,7 @@ class Api {
                     $this->sendError("Données JSON invalides", 400);
                 }
                 
-                postIncident($data);
+                $this->donnees->postIncident($data);
                 return;
             }
         }
@@ -94,7 +97,7 @@ class Api {
                     $this->sendError("Données incomplètes", 400);
                 }
                 
-                putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
+                $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
                 return;
             }
         }
