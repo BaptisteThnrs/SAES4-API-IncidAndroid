@@ -1,6 +1,9 @@
 <?php
-	// Envoi JSON
-	function sendJSON($infos, $codeRetour){
+	/**
+	 * Envoi JSON
+	 * @param array<string, mixed> $infos Les données à encoder en JSON.
+	 */
+	function sendJSON(array $infos, int $codeRetour): void{
 		header("Access-Control-Allow-Origin: *"); // Permet que tout le monde peut y acceder (toutes les IP)
 		header("Content-Type: application/json; charset=UTF-8"); // Type de données envoyées de type JSON
 

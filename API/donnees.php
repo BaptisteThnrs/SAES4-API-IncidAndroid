@@ -1,14 +1,14 @@
 <?php
-require '../fonction/liaisonBD.php';
+require_once '../fonction/liaisonBD.php';
 
 class Donnees {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct() {
         $this->pdo = connecteBD();
     }
 
-    public function getReservation($idEmploye) {
+    public function getReservation(String $idEmploye): void {
         try {
             $maRequete = '
             SELECT reservation.id_reservation AS id_reservation,
@@ -36,7 +36,7 @@ class Donnees {
         }
     }
 
-    public function getIncident() {
+    public function getIncident(): void {
         try {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
@@ -57,7 +57,8 @@ class Donnees {
         }
     }
 
-    public function putIncident($resume, $description, $service_technique, $id_gravite, $id_incident) {
+    public function putIncident(String $resume, String $description, String $service_technique, 
+                                String $id_gravite, String $id_incident): void {
         try {
             $maRequete = 'UPDATE incident 
                           SET resume = :resume, description = :description, 
@@ -78,7 +79,10 @@ class Donnees {
         }
     }
 
-    public function postIncident($donneesJson) {
+    /**
+     * @param array<string, mixed> $donneesJson
+     */
+    public function postIncident(array $donneesJson): void {
         if (!empty($donneesJson['RESUME'])
             && isset($donneesJson['SERVICE_TECHNIQUE'])
             && !empty($donneesJson['ID_GRAVITE'])
@@ -104,7 +108,7 @@ class Donnees {
         }
     }
 
-    public function getIncidentPourUneReservation($idReservation) {
+    public function getIncidentPourUneReservation(String $idReservation): void {
         try {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
@@ -127,7 +131,7 @@ class Donnees {
         }
     }
 
-    public function getInfoUnIncident($idIncident) {
+    public function getInfoUnIncident(String $idIncident): void {
         try {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
@@ -150,7 +154,7 @@ class Donnees {
         }
     }
 
-    private function sendError($message, $code) {
+    private function sendError(String $message, Int $code): void  {
         sendJSON(["Statut" => "KO", "message" => $message], $code);
     }
 }

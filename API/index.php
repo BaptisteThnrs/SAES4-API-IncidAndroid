@@ -3,14 +3,14 @@ require("json.php");
 require("donnees.php");
 
 class Api {
-    private $donnees;
+    private Donnees $donnees;
 
     public function __construct() {
         $this->donnees = new Donnees();
         $this->requete();
     }
 
-    private function requete() {
+    private function requete(): void {
         $method_requete = $_SERVER["REQUEST_METHOD"];
         switch ($method_requete) {
             case "GET":
@@ -27,10 +27,15 @@ class Api {
         }
     }
 
-    private function getRequete() {
+    private function getRequete(): void {
         if (!empty($_GET['demande'])) {
-            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
-            
+            $demande = filter_var($_GET['demande'], FILTER_SANITIZE_URL);
+            $url = [];
+            if ($demande !== false) {
+                $url = explode("/", $demande);
+            } else {
+                $this->sendError("URL non valide ou mal formatée", 404);
+            }
             switch ($url[0]) {
                 case 'toutesReservations':
                     if (!empty($url[1])) {
@@ -64,48 +69,71 @@ class Api {
         }
     }
 
-    private function postRequete() {
+    private function postRequete(): void {
         if (!empty($_GET['demande'])) {
-            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+            $demande = filter_var($_GET['demande'], FILTER_SANITIZE_URL);
+            $url = [];
+            if ($demande !== false) {
+                $url = explode("/", $demande);
+            } else {
+                $this->sendError("URL non valide ou mal formatée", 404);
+            }
             
             if ($url[0] === 'ajoutIncident') {
                 $inputJSON = file_get_contents("php://input");
-                $data = json_decode($inputJSON, true);
+
+                if ($inputJSON === false) {
+                    $this->sendError("Impossible de lire les données d'entrée", 400);
+                } else {
+                    $data = json_decode($inputJSON, true);
                 
-                if ($data === null) {
-                    $this->sendError("Données JSON invalides", 400);
+                    if (!is_array($data)) {
+                        $this->sendError("Données JSON invalides ou format incorrect", 400);
+                    } else {
+                        $this->donnees->postIncident($data);
+                    }
                 }
-                
-                $this->donnees->postIncident($data);
-                return;
             }
         }
         
         $this->sendError("URL non valide POST", 404);
     }
 
-    private function putRequete() {
+    private function putRequete(): void {
         if (!empty($_GET['demande'])) {
-            $url = explode("/", filter_var($_GET['demande'], FILTER_SANITIZE_URL));
+            $demande = filter_var($_GET['demande'], FILTER_SANITIZE_URL);
+            $url = [];
+            if ($demande !== false) {
+                $url = explode("/", $demande);
+            } else {
+                $this->sendError("URL non valide ou mal formatée", 404);
+            }
             
             if ($url[0] === 'modifIncident' && !empty($url[1])) {
                 $idIncident = $url[1];
-                $input = file_get_contents("php://input");
-                $data = json_decode($input, true);
+                $inputJSON = file_get_contents("php://input");
+
+                if ($inputJSON === false) {
+                    $this->sendError("Impossible de lire les données d'entrée", 400);
+                } else {
+                    $data = json_decode($inputJSON, true);
                 
-                if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
-                    $this->sendError("Données incomplètes", 400);
+                    if (!is_array($data)) {
+                        $this->sendError("JSON invalide", 400);
+                    } else {
+                        if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
+                            $this->sendError("Données incomplètes", 400);
+                        }
+                        $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
+                    }
                 }
-                
-                $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
-                return;
             }
         }
         
         $this->sendError("URL non valide PUT", 404);
     }
 
-    private function sendError($message, $code) {
+    private function sendError(String $message, int $code): void {
         $infos = ["Statut" => "KO", "message" => $message];
         sendJSON($infos, $code);
         exit;
