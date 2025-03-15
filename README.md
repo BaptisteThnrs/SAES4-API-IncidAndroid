@@ -34,3 +34,20 @@ Lien vers les ressources
 
 Board GitHub : [Lien vers le board](https://github.com/STONNEEEE/StatiSalle_SAE-S3_WEB/projects?query=is%3Aopen)
 Dossier Google Drive : [SAE_1 - Développement d'une application - S3](https://drive.google.com/drive/folders/1vt5U-agMvmCEU7kloRSSkxKgrbM7QKfS?usp=drive_link)
+
+commandes utiles : 
+
+### To launch the application
+
+```
+$ docker compose up -d 
+$ docker compose exec statisalle composer update
+```
+
+### ouvrir le terminal pour acceder au conteneur
+
+$ docker compose exec statisalle bash
+
+- PHPStan 
+
+    `$ php vendor/bin/phpstan --xdebug analyse -c ./phpstan.neon`

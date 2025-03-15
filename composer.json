@@ -1,5 +1,13 @@
 {
+    "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/the-yasmf-project/yasmf"
+    }
+  ],
+  
     "require-dev": {
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^1.10",
+        "yasmf/yasmf": ">=1.6.1"
     }
 }

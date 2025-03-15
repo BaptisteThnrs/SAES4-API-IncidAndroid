@@ -6,4 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'yasmf\\' => array($vendorDir . '/yasmf/yasmf/src/yasmf'),
+    'controllers\\' => array($vendorDir . '/yasmf/yasmf/tests/controllers'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
 );
