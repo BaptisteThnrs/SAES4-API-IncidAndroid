@@ -5,9 +5,15 @@
       "url": "https://github.com/the-yasmf-project/yasmf"
     }
   ],
+  "autoload": {
+      "psr-4": {
+        "API\\": "API"
+      }
+    },
   
     "require-dev": {
         "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "10.0.*",
         "yasmf/yasmf": ">=1.6.1"
     }
 }
