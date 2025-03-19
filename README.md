@@ -51,3 +51,6 @@ $ docker compose exec statisalle bash
 - PHPStan 
 
     `$ php vendor/bin/phpstan --xdebug analyse -c ./phpstan.neon`
+
+- PHPUnit 
+    - `$ php vendor/bin/phpunit`
