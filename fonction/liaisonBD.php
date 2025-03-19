@@ -7,32 +7,20 @@ function connecteBD() {
      * - Si vous devez connecter une autre base de données, modifiez directement les variables
      *   `$host`, `$user`, `$pass`, et éventuellement `$db` pour refléter vos paramètres de connexion (à partir de ligne 54).
      */
-      $hostAUtiliser = 'local';                    // local
+    $hostAUtiliser = 'local';                    // local
+    //$hostAUtiliser = 'docker';                    // docker
     //$hostAUtiliser = 'distant';                  // base de donnée distante
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if ($hostAUtiliser == 'local') {
 
+        $host = 'localhost';                     // Adresse de l'hôte pour la base locale
+        $db = 'statisallebd';                    // Base de données local
+        $user = 'root';                   // Identifiant pour la base locale
+        $pass = 'root';                // Mot de passe pour la base locale
+        $charset = 'utf8mb4';                    // Jeu de caractères à utiliser (UTF-8 étendu)
+        $port = 3306;                            // Port MySQL (3306 par défaut)
+
+    } else if ($hostAUtiliser == 'docker') {
         $host = 'statisalle-db';                     // Adresse de l'hôte pour la base locale
         $db = 'statisalle';                    // Base de données local
         $user = 'statisalle';                   // Identifiant pour la base locale
