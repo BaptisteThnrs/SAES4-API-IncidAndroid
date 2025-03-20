@@ -133,9 +133,9 @@
                     </div>
                 <?php endif; ?>
                 <br>
-                <form method="post" action="../indexReservation?controller='CreationReservation'">
-                    <input type="hidden" name="controller" value="Categories">
-                    <input type="hidden" name="action" value="saveCategorie">
+                <form method="post" action="../indexReservation.php">
+                    <input type="hidden" name="controller" value="CreationReservation">
+                    <input type="hidden" name="action" value="ajoutReservation">
                     <div class="row"> <!-- Grande row -->
                         <div class="form-group offset-md-2 col-md-4"> <!-- first colonne -->
                             <br>

@@ -8,11 +8,8 @@ use PDOException;
 
 class Requete
 {
-
     // Fonction pour insérer une réservation
-    public function insertionReservation($nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin): PDOStatement {
-        global $pdo;
-
+    public function insertionReservation(PDO $pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin) {
         try {
             // Récupère le dernier identifiant de la table 'reservation'
             $sqlLastId = "SELECT id_reservation FROM reservation ORDER BY id_reservation DESC LIMIT 1";

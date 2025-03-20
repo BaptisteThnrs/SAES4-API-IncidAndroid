@@ -21,6 +21,10 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         array (
             'controllers\\' => 12,
         ),
+        'a' => 
+        array (
+            'application\\' => 12,
+        ),
         'P' => 
         array (
             'PhpParser\\' => 10,
@@ -28,6 +32,10 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         'D' => 
         array (
             'DeepCopy\\' => 9,
+        ),
+        'A' => 
+        array (
+            'API\\' => 4,
         ),
     );
 
@@ -40,6 +48,10 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         array (
             0 => __DIR__ . '/..' . '/yasmf/yasmf/tests/controllers',
         ),
+        'application\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/application',
+        ),
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
@@ -47,6 +59,10 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'API\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/API',
         ),
     );
 

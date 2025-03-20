@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'yasmf\\' => array($vendorDir . '/yasmf/yasmf/src/yasmf'),
     'controllers\\' => array($vendorDir . '/yasmf/yasmf/tests/controllers'),
+    'application\\' => array($baseDir . '/application'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'API\\' => array($baseDir . '/API'),
 );
