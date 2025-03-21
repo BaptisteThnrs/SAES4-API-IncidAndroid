@@ -1,16 +1,15 @@
 <?php
     $startTime = microtime(true); // temps de chargement de la page
-    require '../fonction/connexion.php';
-    require '../fonction/reservation.php';
+    require __DIR__ . '/../fonction/connexion.php';
 
     session_start();
     verif_session();
 
     $idLogin = $_SESSION['id'];
 
-    $tabSalles = listeSalles();
-    $tabActivites = listeActivites();
-    $tabReservation = affichageReservation();
+    $tabSalles = $listeSalles;
+    $tabActivites = $listeActivites;
+    $tabReservation = $affichageReservation;
 
     // Vérification des variables du formulaire
     $nomSalle =         isset($_POST['nomSalle'])       ? htmlspecialchars($_POST['nomSalle']) : '';
@@ -45,16 +44,16 @@
         $erreurs['heureFin'] = "L'heure de fin est obligatoire.";
     }
 
-    // Si aucun champ n'a d'erreur, on tente l'insertion
-    if (empty($erreurs)) {
-        try {
-            // Appel à la fonction pour insérer la réservation
-            insertionReservation($nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin);
-            $messageSucces = "Votre réservation a été effectuée avec succès!";
-        } catch (PDOException $e) {
-            $messageErreur = "Une erreur est survenue lors de la réservation.";
-        }
-    }
+    // // Si aucun champ n'a d'erreur, on tente l'insertion
+    // if (empty($erreurs)) {
+    //     try {
+    //         // Appel à la fonction pour insérer la réservation
+    //         insertionReservation($nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin);
+    //         $messageSucces = "Votre réservation a été effectuée avec succès!";
+    //     } catch (PDOException $e) {
+    //         $messageErreur = "Une erreur est survenue lors de la réservation.";
+    //     }
+    // }
 
     /*
      * Structuration des réservations par salle et par date

@@ -43,7 +43,14 @@
                         </p>
                         <p>
                             <!-- Lien vers la page pour faire une réservation -->
-                            <a href="../views/creationReservation.php" target="blank" class="text-decoration-none">🕒 Nouvelle réservation (ajout rapide).</a>
+                            <form action="../indexReservation.php" method="GET" target="_blank">
+                                <input type="hidden" name="controller" value="CreationReservation">
+                                <input type="hidden" name="action" value="index">
+                                <button type="submit" class="text-decoration-none" style="background: none; border: none; color: inherit; cursor: pointer;">
+                                    🕒 Nouvelle réservation (ajout rapide).
+                                </button>
+                            </form>
+
                         </p>
                         <p>
                             <!-- Lien vers la page pour afficher les réservations -->

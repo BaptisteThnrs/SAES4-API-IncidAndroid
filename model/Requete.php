@@ -116,17 +116,15 @@ class Requete
         }
     }
 
-    public function listeActivites(): PDOStatement
+    public function listeActivites(PDO $pdo): array
     {
-        global $pdo;
-        // Retourne la liste des noms d'activités dans un tableau
         $tableauRetour = array();
         try {
             $maRequete = $pdo->prepare("SELECT DISTINCT nom_activite FROM activite ORDER BY nom_activite ASC");
 
             if ($maRequete->execute()) {
-                while ($ligne = $maRequete->fetch()) {
-                    $tableauRetour[] = $ligne->nom_activite;
+                while ($ligne = $maRequete->fetch(PDO::FETCH_ASSOC)) { // Utilisation de FETCH_ASSOC pour obtenir un tableau associatif
+                    $tableauRetour[] = $ligne['nom_activite']; // Accès aux données avec le nom de la clé
                 }
             }
             return $tableauRetour;
@@ -136,17 +134,16 @@ class Requete
         }
     }
 
-    public function listeSalles(): PDOStatement
+
+    public function listeSalles(PDO $pdo): array
     {
-        global $pdo;
-        // Retourne la liste des noms de salles dans un tableau
         $tableauRetour = array();
         try {
             $maRequete = $pdo->prepare("SELECT DISTINCT nom FROM salle ORDER BY nom ASC");
 
             if ($maRequete->execute()) {
-                while ($ligne = $maRequete->fetch()) {
-                    $tableauRetour[] = $ligne->nom;
+                while ($ligne = $maRequete->fetch(PDO::FETCH_ASSOC)) { // Utilisation de FETCH_ASSOC pour obtenir un tableau associatif
+                    $tableauRetour[] = $ligne['nom']; // Accès aux données avec le nom de la clé
                 }
             }
             return $tableauRetour;
@@ -155,6 +152,7 @@ class Requete
             throw new PDOException($e->getMessage(), $e->getCode());
         }
     }
+
 
     public function verif_session(): PDOStatement 
     {
@@ -163,5 +161,24 @@ class Requete
             header('Location: ../index.php');
             exit;
         }
+    }
+
+    function affichageReservation(PDO $pdo) 
+    {
+        $requete = "SELECT reservation.id_reservation as id_reservation, salle.nom as nom_salle, employe.nom as nom_employe,
+                    employe.prenom as prenom_employe, activite.nom_activite as nom_activite, reservation.date_reservation 
+                    as date, reservation.heure_debut as heure_debut, reservation.heure_fin as heure_fin, reservation.id_employe as id_employe
+                    FROM reservation
+                    JOIN salle
+                    ON reservation.id_salle = salle.id_salle
+                    JOIN employe
+                    ON reservation.id_employe = employe.id_employe
+                    JOIN activite
+                    ON reservation.id_activite = activite.id_activite
+                    ORDER BY date DESC";
+        $requete = $pdo->prepare($requete);
+        $requete->execute();
+        $resultat = $requete->fetchAll(PDO::FETCH_ASSOC);
+        return $resultat;
     }
 }

@@ -20,23 +20,17 @@ class CreationReservationController {
         $this->requete = $requete;
     }
 
-    // public function index($pdo): view {
-    //     $nomSalle = HttpHelper::getParam('nomSalle');
-    //     $nomActivite = HttpHelper::getParam('nomActivite');
-    //     $date = HttpHelper::getParam('date');
-    //     $heureDebut = HttpHelper::getParam('heureDebut');
-    //     $heureFin = HttpHelper::getParam('heureFin');
-    //     $objet = HttpHelper::getParam('objet');
-    //     $nom = HttpHelper::getParam('nom');
-    //     $prenom = HttpHelper::getParam('prenom');
-    //     $numTel = HttpHelper::getParam('numTel');
-    //     $precisActivite = HttpHelper::getParam('precisActivite');
-    //     try {
-    //         $this->requete->insertionReservation($nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin);
-    //     } catch(\PDOException $ex) {
-    //         //$view->setVar('error', "Un problème est survenu.");
-    //     }
-    // }
+    public function index(PDO $pdo): view {
+            $tabSalles = $this->requete->listeSalles($pdo);
+            $tabActivites = $this->requete->listeActivites($pdo);
+            $tabReservation = $this->requete->affichageReservation($pdo);
+
+            $view = new View("../views/creationReservation");
+            $view->setVar('listeSalles', $tabSalles);
+            $view->setVar('listeActivites', $tabActivites);
+            $view->setVar('affichageReservation', $tabReservation);
+            return $view;
+    }
 
     public function ajoutReservation(PDO $pdo) {
         $nomSalle = HttpHelper::getParam('nomSalle');
@@ -50,7 +44,17 @@ class CreationReservationController {
         $numTel = HttpHelper::getParam('numTel');
         $precisActivite = HttpHelper::getParam('precisActivite');
         try {
-            $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, 1);
+            $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, 1); //TODO changer 1 par id de l'employe
+
+            $tabSalles = $this->requete->listeSalles($pdo);
+            $tabActivites = $this->requete->listeActivites($pdo);
+            $tabReservation = $this->requete->affichageReservation($pdo);
+
+            $view = new View("../views/creationReservation");
+            $view->setVar('listeSalles', $tabSalles);
+            $view->setVar('listeActivites', $tabActivites);
+            $view->setVar('affichageReservation', $tabReservation);
+            return $view;
         } catch(\PDOException $ex) {
             //$view->setVar('error', "Un problème est survenu.");
         }

@@ -1,5 +1,5 @@
 <?php
-function connecteBD() {
+function connecteBD(): PDO {
 
     /*
      * Configuration de l'accès à la base de données.

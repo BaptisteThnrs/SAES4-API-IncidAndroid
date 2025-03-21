@@ -1,5 +1,5 @@
 <?php
-    require("liaisonBD.php");
+    require 'liaisonBD.php';
     $pdo = connecteBD();
 
     /***********************************/
