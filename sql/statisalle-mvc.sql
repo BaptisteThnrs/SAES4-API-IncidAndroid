@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS login (
 id_login INT AUTO_INCREMENT PRIMARY KEY,
 login VARCHAR(25) NOT NULL,
 mdp VARCHAR(255) NOT NULL,
+api_key VARCHAR(12),
 id_type INT,
 id_employe CHAR(7),
 FOREIGN KEY (id_type) REFERENCES type_utilisateur(id_type),

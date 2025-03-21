@@ -1,12 +1,15 @@
 <?php
 require("json.php");
 require("donnees.php");
+require("authentification.php");
 
 class Api {
     private Donnees $donnees;
+    private Authentification $authentification;
 
     public function __construct() {
         $this->donnees = new Donnees();
+        $this->authentification = new Authentification();
         $this->requete();
     }
 
@@ -37,18 +40,28 @@ class Api {
                 $this->sendError("URL non valide ou mal formatée", 404);
             }
             switch ($url[0]) {
+                case 'login':
+                    if (!empty($url[1]) && !empty($url[2])) {
+                        $this->authentification->verifLoginPassword($url[1], $url[2]);
+                    } else {
+                        $this->sendError("Employé non trouvé", 404);
+                    }
+                    break;
                 case 'toutesReservations':
                     if (!empty($url[1])) {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getReservation($url[1]);
                     } else {
                         $this->sendError("Employé non trouvé", 404);
                     }
                     break;
                 case 'tousIncidents':
+                    $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                     $this->donnees->getIncident();
                     break;
                 case 'incidentUneReservation':
                     if (!empty($url[1])) {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getIncidentPourUneReservation($url[1]);
                     } else {
                         $this->sendError("Réservation non trouvée", 404);
@@ -56,6 +69,7 @@ class Api {
                     break;
                 case 'InfoUnIncident':
                     if (!empty($url[1])) {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getInfoUnIncident($url[1]);
                     } else {
                         $this->sendError("Incident non trouvé", 404);
@@ -90,6 +104,7 @@ class Api {
                     if (!is_array($data)) {
                         $this->sendError("Données JSON invalides ou format incorrect", 400);
                     } else {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->postIncident($data);
                     }
                 }
@@ -124,6 +139,7 @@ class Api {
                         if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
                             $this->sendError("Données incomplètes", 400);
                         }
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
                     }
                 }
