@@ -157,5 +157,20 @@ class Donnees {
     private function sendError(String $message, Int $code): void  {
         sendJSON(["Statut" => "KO", "message" => $message], $code);
     }
+
+    public function getToutesGravite(): void {
+        try {
+            $maRequete = 'SELECT intitule, id_gravite
+                          FROM gravite';
+
+            $stmt = $this->pdo->prepare($maRequete);
+            $stmt->execute();
+
+            $incident = $stmt->fetchAll();
+            sendJSON($incident, 200);
+        } catch (PDOException $e) {
+            $this->sendError($e->getMessage(), 500);
+        }
+    }
 }
 ?>

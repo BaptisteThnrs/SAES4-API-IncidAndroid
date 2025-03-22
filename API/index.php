@@ -67,13 +67,17 @@ class Api {
                         $this->sendError("Réservation non trouvée", 404);
                     }
                     break;
-                case 'InfoUnIncident':
+                case 'infoUnIncident':
                     if (!empty($url[1])) {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getInfoUnIncident($url[1]);
                     } else {
                         $this->sendError("Incident non trouvé", 404);
                     }
+                    break;
+                case 'toutesGravites':
+                    $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
+                    $this->donnees->getToutesGravite();
                     break;
                 default:
                     $this->sendError("Requête inexistant", 404);
