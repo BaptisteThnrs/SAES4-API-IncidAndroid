@@ -14,4 +14,10 @@
 		echo json_encode($infos,JSON_UNESCAPED_UNICODE);
 		die();
 	}
+
+    function sendError(String $message, int $code): void {
+        $infos = ["Statut" => "KO", "message" => $message];
+        sendJSON($infos, $code);
+        die();
+    }
 ?>

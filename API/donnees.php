@@ -32,7 +32,7 @@ class Donnees {
             $reservations = $stmt->fetchAll();
             sendJSON($reservations, 200);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
     }
 
@@ -53,7 +53,7 @@ class Donnees {
             $incidents = $stmt->fetchAll();
             sendJSON($incidents, 200);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
     }
 
@@ -75,7 +75,7 @@ class Donnees {
 
             sendJSON(["Statut" => "OK"], 201);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
     }
 
@@ -101,10 +101,10 @@ class Donnees {
 
                 sendJSON(["Statut" => "OK", "ID" => $this->pdo->lastInsertId()], 201);
             } catch (PDOException $e) {
-                $this->sendError($e->getMessage(), 500);
+                sendError($e->getMessage(), 500);
             }
         } else {
-            $this->sendError("Données incomplètes", 400);
+            sendError("Données incomplètes", 400);
         }
     }
 
@@ -127,7 +127,7 @@ class Donnees {
             $incidents = $stmt->fetchAll();
             sendJSON($incidents, 200);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
     }
 
@@ -150,12 +150,8 @@ class Donnees {
             $incident = $stmt->fetchAll();
             sendJSON($incident, 200);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
-    }
-
-    private function sendError(String $message, Int $code): void  {
-        sendJSON(["Statut" => "KO", "message" => $message], $code);
     }
 
     public function getToutesGravite(): void {
@@ -169,7 +165,7 @@ class Donnees {
             $incident = $stmt->fetchAll();
             sendJSON($incident, 200);
         } catch (PDOException $e) {
-            $this->sendError($e->getMessage(), 500);
+            sendError($e->getMessage(), 500);
         }
     }
 }

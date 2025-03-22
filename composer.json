@@ -16,5 +16,8 @@
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "10.0.*",
         "yasmf/yasmf": ">=1.6.1"
-    }
+    },
+  "require": {
+    "ext-pdo": "*"
+  }
 }
