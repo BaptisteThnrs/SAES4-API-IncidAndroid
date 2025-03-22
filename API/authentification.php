@@ -33,8 +33,6 @@ class Authentification {
     public function verifLoginPassword($login, $password) {
         try {
             $password = sha1($password);
-            var_dump($login);
-            var_dump($password);
             $requete = "SELECT id_login, id_employe FROM login WHERE login = :identifiant AND mdp = :mdp";
             $stmt = $this->pdo->prepare($requete);
             $stmt->bindParam(':identifiant', $login);
