@@ -393,8 +393,10 @@ CREATE TABLE IF NOT EXISTS incident (
     service_technique BOOLEAN,
     id_gravite INT NOT NULL,
     id_reservation CHAR(7) NOT NULL,
+    id_employe CHAR(7) NOT NULL,
     date_signalement DATE NOT NULL,
     heure_signalement TIME NOT NULL,
     FOREIGN KEY (id_gravite) REFERENCES gravite(id_gravite),
-    FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation)
+    FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation),
+    FOREIGN KEY (id_employe) REFERENCES employe(id_employe)
 ) CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

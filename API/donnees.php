@@ -36,18 +36,20 @@ class Donnees {
         }
     }
 
-    public function getIncident(): void {
+    public function getIncident($idEmploye): void {
         try {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
                                  reservation.heure_debut, reservation.heure_fin, salle.nom,
-                                 incident.date_signalement, incident.heure_signalement
+                                 incident.date_signalement, incident.heure_signalement, incident.id_employe
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           JOIN reservation ON incident.id_reservation = reservation.id_reservation
-                          JOIN salle ON reservation.id_salle = salle.id_salle';
+                          JOIN salle ON reservation.id_salle = salle.id_salle
+                          WHERE incident.id_employe = :idEmploye';
 
             $stmt = $this->pdo->prepare($maRequete);
+            $stmt->bindValue(':idEmploye', $idEmploye, PDO::PARAM_INT);
             $stmt->execute();
 
             $incidents = $stmt->fetchAll();
@@ -58,11 +60,11 @@ class Donnees {
     }
 
     public function putIncident(String $resume, String $description, String $service_technique, 
-                                String $id_gravite, String $id_incident): void {
+                                String $id_gravite, String $id_incident, String $id_employe): void {
         try {
             $maRequete = 'UPDATE incident 
                           SET resume = :resume, description = :description, 
-                              service_technique = :service_technique, id_gravite = :id_gravite 
+                              service_technique = :service_technique, id_gravite = :id_gravite
                           WHERE id_incident = :id_incident';
 
             $stmt = $this->pdo->prepare($maRequete);
@@ -86,10 +88,11 @@ class Donnees {
         if (!empty($donneesJson['RESUME'])
             && isset($donneesJson['SERVICE_TECHNIQUE'])
             && !empty($donneesJson['ID_GRAVITE'])
-            && !empty($donneesJson['ID_RESERVATION'])) {
+            && !empty($donneesJson['ID_RESERVATION'])
+            && !empty($donneesJson['ID_EMPLOYE'])) {
             try {
-                $maRequete = 'INSERT INTO incident (RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, DATE_SIGNALEMENT, HEURE_SIGNALEMENT) 
-                              VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, CURDATE(), CURTIME())';
+                $maRequete = 'INSERT INTO incident (RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, ID_EMPLOYE, DATE_SIGNALEMENT, HEURE_SIGNALEMENT) 
+                              VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, :ID_EMPLOYE, CURDATE(), CURTIME())';
 
                 $stmt = $this->pdo->prepare($maRequete);
                 $stmt->bindParam(":RESUME", $donneesJson['RESUME']);
@@ -97,6 +100,7 @@ class Donnees {
                 $stmt->bindParam(":SERVICE_TECHNIQUE", $donneesJson['SERVICE_TECHNIQUE']);
                 $stmt->bindParam(":ID_GRAVITE", $donneesJson['ID_GRAVITE']);
                 $stmt->bindParam(":ID_RESERVATION", $donneesJson['ID_RESERVATION']);
+                $stmt->bindParam(":ID_EMPLOYE", $donneesJson['ID_EMPLOYE']);
                 $stmt->execute();
 
                 sendJSON(["Statut" => "OK", "ID" => $this->pdo->lastInsertId()], 201);
