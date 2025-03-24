@@ -101,7 +101,7 @@
     <body>
         <div class="container-fluid">
             <!-- Header de la page -->
-            <?php include '../include/header.php'; ?>
+            <?php include __DIR__ . '/../include/header.php'; ?>
 
             <div class="full-screen">
                 <!-- Contenu de la page -->
@@ -301,12 +301,12 @@
                 </div>
             </div>
             <!-- Footer de la page -->
-            <?php include '../include/footer.php'; ?>
+            <?php include __DIR__ . '/../include/footer.php'; ?>
         </div>
         <!-- JavaScript pour les formulaires dynamique -->
         <script id="data-reservations" type="application/json">
             <?= json_encode($reservationsParSalle, JSON_HEX_TAG); ?>
         </script>
-        <script src="formulaireCreationReservation.js" defer></script>
+        <script src="/views/formulaireCreationReservation.js" defer></script>
     </body>
 </html>
