@@ -17,6 +17,18 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         array (
             'yasmf\\' => 6,
         ),
+        'v' => 
+        array (
+            'views\\' => 6,
+        ),
+        'm' => 
+        array (
+            'model\\' => 6,
+        ),
+        'f' => 
+        array (
+            'fonction\\' => 9,
+        ),
         'c' => 
         array (
             'controllers\\' => 12,
@@ -44,9 +56,22 @@ class ComposerStaticInit06a282a9caaa357cc75a987b3fac0f2f
         array (
             0 => __DIR__ . '/..' . '/yasmf/yasmf/src/yasmf',
         ),
+        'views\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/views',
+        ),
+        'model\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/model',
+        ),
+        'fonction\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/fonction',
+        ),
         'controllers\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yasmf/yasmf/tests/controllers',
+            0 => __DIR__ . '/../..' . '/controllers',
+            1 => __DIR__ . '/..' . '/yasmf/yasmf/tests/controllers',
         ),
         'application\\' => 
         array (

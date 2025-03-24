@@ -26,7 +26,7 @@ class Api {
                 $this->putRequete();
                 break;
             default:
-                $this->sendError("Méthode non supportée", 405);
+                sendError("Méthode non supportée", 405);
         }
     }
 
@@ -37,14 +37,14 @@ class Api {
             if ($demande !== false) {
                 $url = explode("/", $demande);
             } else {
-                $this->sendError("URL non valide ou mal formatée", 404);
+                sendError("URL non valide ou mal formatée", 404);
             }
             switch ($url[0]) {
                 case 'login':
                     if (!empty($url[1]) && !empty($url[2])) {
                         $this->authentification->verifLoginPassword($url[1], $url[2]);
                     } else {
-                        $this->sendError("Employé non trouvé", 404);
+                        sendError("Employé non trouvé", 404);
                     }
                     break;
                 case 'toutesReservations':
@@ -52,7 +52,7 @@ class Api {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getReservation($url[1]);
                     } else {
-                        $this->sendError("Employé non trouvé", 404);
+                        sendError("Employé non trouvé", 404);
                     }
                     break;
                 case 'tousIncidents':
@@ -68,7 +68,7 @@ class Api {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getIncidentPourUneReservation($url[1]);
                     } else {
-                        $this->sendError("Réservation non trouvée", 404);
+                        sendError("Réservation non trouvée", 404);
                     }
                     break;
                 case 'infoUnIncident':
@@ -76,7 +76,7 @@ class Api {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getInfoUnIncident($url[1]);
                     } else {
-                        $this->sendError("Incident non trouvé", 404);
+                        sendError("Incident non trouvé", 404);
                     }
                     break;
                 case 'toutesGravites':
@@ -84,10 +84,10 @@ class Api {
                     $this->donnees->getToutesGravite();
                     break;
                 default:
-                    $this->sendError("Requête inexistant", 404);
+                    sendError("Requête inexistant", 404);
             }
         } else {
-            $this->sendError("URL non valide", 404);
+            sendError("URL non valide", 404);
         }
     }
 
@@ -98,19 +98,19 @@ class Api {
             if ($demande !== false) {
                 $url = explode("/", $demande);
             } else {
-                $this->sendError("URL non valide ou mal formatée", 404);
+                sendError("URL non valide ou mal formatée", 404);
             }
             
             if ($url[0] === 'ajoutIncident') {
                 $inputJSON = file_get_contents("php://input");
 
                 if ($inputJSON === false) {
-                    $this->sendError("Impossible de lire les données d'entrée", 400);
+                    sendError("Impossible de lire les données d'entrée", 400);
                 } else {
                     $data = json_decode($inputJSON, true);
                 
                     if (!is_array($data)) {
-                        $this->sendError("Données JSON invalides ou format incorrect", 400);
+                        sendError("Données JSON invalides ou format incorrect", 400);
                     } else {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->postIncident($data);
@@ -119,7 +119,7 @@ class Api {
             }
         }
         
-        $this->sendError("URL non valide POST", 404);
+        sendError("URL non valide POST", 404);
     }
 
     private function putRequete(): void {
@@ -129,7 +129,7 @@ class Api {
             if ($demande !== false) {
                 $url = explode("/", $demande);
             } else {
-                $this->sendError("URL non valide ou mal formatée", 404);
+                sendError("URL non valide ou mal formatée", 404);
             }
             
             if ($url[0] === 'modifIncident' && !empty($url[1])) {
@@ -137,15 +137,15 @@ class Api {
                 $inputJSON = file_get_contents("php://input");
 
                 if ($inputJSON === false) {
-                    $this->sendError("Impossible de lire les données d'entrée", 400);
+                    sendError("Impossible de lire les données d'entrée", 400);
                 } else {
                     $data = json_decode($inputJSON, true);
                 
                     if (!is_array($data)) {
-                        $this->sendError("JSON invalide", 400);
+                        sendError("JSON invalide", 400);
                     } else {
                         if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
-                            $this->sendError("Données incomplètes", 400);
+                            sendError("Données incomplètes", 400);
                         }
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
@@ -154,13 +154,7 @@ class Api {
             }
         }
         
-        $this->sendError("URL non valide PUT", 404);
-    }
-
-    private function sendError(String $message, int $code): void {
-        $infos = ["Statut" => "KO", "message" => $message];
-        sendJSON($infos, $code);
-        exit;
+        sendError("URL non valide PUT", 404);
     }
 }
 

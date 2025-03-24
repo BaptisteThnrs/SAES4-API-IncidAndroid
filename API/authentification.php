@@ -9,7 +9,7 @@ class Authentification {
     public function authentification() {
         // Vérifie si la clé API est fournie dans les en-têtes HTTP
         if (!isset($_SERVER["HTTP_APIKEY"])) {
-            $this->sendError("Authentification nécessaire par APIKEY.", 401);
+            sendError("Authentification nécessaire par APIKEY.", 401);
         }
 
         $cleAPI = $_SERVER["HTTP_APIKEY"];
@@ -23,7 +23,7 @@ class Authentification {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$user) {
-                $this->sendError("APIKEY invalide.", 403);
+                sendError("APIKEY invalide.", 403);
             }
         } catch (PDOException $e) {
             echo 'Erreur : ' . $e->getMessage();
@@ -33,8 +33,6 @@ class Authentification {
     public function verifLoginPassword($login, $password) {
         try {
             $password = sha1($password);
-            var_dump($login);
-            var_dump($password);
             $requete = "SELECT id_login, id_employe FROM login WHERE login = :identifiant AND mdp = :mdp";
             $stmt = $this->pdo->prepare($requete);
             $stmt->bindParam(':identifiant', $login);
@@ -67,23 +65,16 @@ class Authentification {
                 // Retourner la clé API et l'ID employé
                 $infos['APIKEY'] = $apiKey;
                 $infos['id_employe'] = $user['id_employe'];
-                $this->sendJSON($infos, 200);
+                sendJSON($infos, 200);
             } else {
                 // Login incorrect
                 $infos['Statut'] = "KO";
                 $infos['message'] = "Logins incorrects.";
-                $this->sendJSON($infos, 401);
+                sendJSON($infos, 401);
             }
         } catch (PDOException $e) {
             echo 'Erreur : ' . $e->getMessage();
         }
-    }
-
-    private function sendJSON($data, $status = 200) {
-        header("Content-Type: application/json");
-        http_response_code($status);
-        echo json_encode($data);
-        exit();
     }
 }
 ?>

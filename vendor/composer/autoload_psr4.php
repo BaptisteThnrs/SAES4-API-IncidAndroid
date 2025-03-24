@@ -7,7 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'yasmf\\' => array($vendorDir . '/yasmf/yasmf/src/yasmf'),
-    'controllers\\' => array($vendorDir . '/yasmf/yasmf/tests/controllers'),
+    'views\\' => array($baseDir . '/views'),
+    'model\\' => array($baseDir . '/model'),
+    'fonction\\' => array($baseDir . '/fonction'),
+    'controllers\\' => array($baseDir . '/controllers', $vendorDir . '/yasmf/yasmf/tests/controllers'),
     'application\\' => array($baseDir . '/application'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
