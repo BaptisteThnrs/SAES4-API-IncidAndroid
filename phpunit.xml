@@ -19,13 +19,14 @@
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="default test suit">
-            <directory>testAPI</directory>
+            <directory suffix="Test.php">MVCTests</directory>
         </testsuite>
     </testsuites>
 
     <coverage>
         <include>
-            <directory suffix=".php">statisalle/API</directory>
+            <directory suffix=".php">statisalle/controllers</directory>
+             <directory suffix=".php">statisalle/application</directory>
         </include>
         <exclude>
             <directory suffix=".php">statisalle/lib</directory>
