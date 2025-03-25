@@ -60,7 +60,7 @@ class Donnees {
     }
 
     public function putIncident(String $resume, String $description, String $service_technique, 
-                                String $id_gravite, String $id_incident, String $id_employe): void {
+                                String $id_gravite, String $id_incident): void {
         try {
             $maRequete = 'UPDATE incident 
                           SET resume = :resume, description = :description, 

@@ -32,7 +32,7 @@ class CreationReservationController {
             return $view;
     }
 
-    public function ajoutReservation(PDO $pdo) {
+    public function ajoutReservation(PDO $pdo): view {
         $nomSalle = HttpHelper::getParam('nomSalle');
         $nomActivite = HttpHelper::getParam('nomActivite');
         $date = HttpHelper::getParam('date');
@@ -43,21 +43,17 @@ class CreationReservationController {
         $prenom = HttpHelper::getParam('prenom');
         $numTel = HttpHelper::getParam('numTel');
         $precisActivite = HttpHelper::getParam('precisActivite');
-        try {
-            $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, 1); //TODO changer 1 par id de l'employe
+        
+        $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, 1); //TODO changer 1 par id de l'employe
+        $tabSalles = $this->requete->listeSalles($pdo);
+        $tabActivites = $this->requete->listeActivites($pdo);
+        $tabReservation = $this->requete->affichageReservation($pdo);
 
-            $tabSalles = $this->requete->listeSalles($pdo);
-            $tabActivites = $this->requete->listeActivites($pdo);
-            $tabReservation = $this->requete->affichageReservation($pdo);
-
-            $view = new View("../views/creationReservation");
-            $view->setVar('listeSalles', $tabSalles);
-            $view->setVar('listeActivites', $tabActivites);
-            $view->setVar('affichageReservation', $tabReservation);
-            return $view;
-        } catch(\PDOException $ex) {
-            //$view->setVar('error', "Un problème est survenu.");
-        }
+        $view = new View("../views/creationReservation");
+        $view->setVar('listeSalles', $tabSalles);
+        $view->setVar('listeActivites', $tabActivites);
+        $view->setVar('affichageReservation', $tabReservation);
+        return $view;
     }
 }
 ?>
