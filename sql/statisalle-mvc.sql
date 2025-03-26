@@ -400,3 +400,15 @@ CREATE TABLE IF NOT EXISTS incident (
     FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation),
     FOREIGN KEY (id_employe) REFERENCES employe(id_employe)
 ) CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Insertion incident
+INSERT INTO incident (resume, description, service_technique, id_gravite, id_reservation, id_employe, date_signalement, heure_signalement) VALUES
+('Fuite d\'eau', 'Fuite d\'eau au plafond, risque d\'inondation.', TRUE, 1, 'R000001', 'E000001', '2025-03-01', '08:30:00'),
+('Problème électricité', 'Panne de courant dans toute la salle.', TRUE, 1, 'R000002', 'E000001', '2025-03-02', '10:15:00'),
+('Climatisation en panne', 'La climatisation ne fonctionne plus.', FALSE, 2, 'R000003', 'E000001', '2025-03-03', '14:00:00'),
+('Vidéo-projecteur HS', 'Le projecteur ne s\'allume pas.', FALSE, 3, 'R000004', 'E000001', '2025-03-04', '09:45:00'),
+('Chaise cassée', 'Une chaise est cassée, danger potentiel.', FALSE, 3, 'R000005', 'E000001', '2025-03-05', '11:30:00'),
+('Porte bloquée', 'La porte de la salle ne s\'ouvre plus.', TRUE, 2, 'R000006', 'E000002', '2025-03-06', '16:20:00'),
+('Table bancale', 'Une table est instable et branlante.', FALSE, 4, 'R000007', 'E000002', '2025-03-07', '13:10:00'),
+('Tâches sur le mur', 'Des tâches de peinture sont visibles.', FALSE, 4, 'R000008', 'E000002', '2025-03-08', '15:40:00'),
+('WiFi hors service', 'Impossible de se connecter au réseau.', TRUE, 2, 'R000009', 'E000002', '2025-03-09', '08:00:00'),
+('Fenêtre cassée', 'Une vitre est brisée, risque de blessure.', TRUE, 1, 'R000010', 'E000002', '2025-03-10', '17:25:00');
