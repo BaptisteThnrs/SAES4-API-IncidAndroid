@@ -144,11 +144,8 @@ class Api {
                     if (!is_array($data)) {
                         sendError("JSON invalide", 400);
                     } else {
-                        if (!isset($data['resume'], $data['service_technique'], $data['id_gravite'])) {
-                            sendError("Données incomplètes", 400);
-                        }
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
-                        $this->donnees->putIncident($data['resume'], $data['description'], $data['service_technique'], $data['id_gravite'], $idIncident);
+                        $this->donnees->putIncident($data, $idIncident);
                     }
                 }
             }

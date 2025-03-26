@@ -59,25 +59,30 @@ class Donnees {
         }
     }
 
-    public function putIncident(String $resume, String $description, String $service_technique, 
-                                String $id_gravite, String $id_incident): void {
-        try {
-            $maRequete = 'UPDATE incident 
-                          SET resume = :resume, description = :description, 
-                              service_technique = :service_technique, id_gravite = :id_gravite
-                          WHERE id_incident = :id_incident';
+    public function putIncident(array $donneesJson, $id_incident): void {
+        if (!empty($donneesJson['RESUME'])
+            && isset($donneesJson['SERVICE_TECHNIQUE'])
+            && !empty($donneesJson['ID_GRAVITE'])) {
+            try {
+                $maRequete = 'UPDATE incident 
+                            SET resume = :resume, description = :description, 
+                                service_technique = :service_technique, id_gravite = :id_gravite
+                            WHERE id_incident = :id_incident';
 
-            $stmt = $this->pdo->prepare($maRequete);
-            $stmt->bindParam(":resume", $resume);
-            $stmt->bindParam(":description", $description);
-            $stmt->bindParam(":service_technique", $service_technique);
-            $stmt->bindParam(":id_gravite", $id_gravite);
-            $stmt->bindParam(":id_incident", $id_incident);
-            $stmt->execute();
+                $stmt = $this->pdo->prepare($maRequete);
+                $stmt->bindParam(":resume", $donneesJson['RESUME']);
+                $stmt->bindParam(":description", $donneesJson['DESCRIPTION']);
+                $stmt->bindParam(":service_technique", $donneesJson['SERVICE_TECHNIQUE']);
+                $stmt->bindParam(":id_gravite", $donneesJson['ID_GRAVITE']);
+                $stmt->bindParam(":id_incident", $id_incident);
+                $stmt->execute();
 
-            sendJSON(["Statut" => "OK"], 201);
-        } catch (PDOException $e) {
-            sendError($e->getMessage(), 500);
+                sendJSON(["Statut" => "OK"], 201);
+            } catch (PDOException $e) {
+                sendError($e->getMessage(), 500);
+            }
+        } else {
+            sendError("Données incomplètes", 400);
         }
     }
 
