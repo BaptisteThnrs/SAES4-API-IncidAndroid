@@ -6,7 +6,7 @@ class Authentification {
         $this->pdo = connecteBD();
     }
 
-    public function authentification() {
+    public function authentification(): void {
         // Vérifie si la clé API est fournie dans les en-têtes HTTP
         if (!isset($_SERVER["HTTP_APIKEY"])) {
             sendError("Authentification nécessaire par APIKEY.", 401);
@@ -30,7 +30,7 @@ class Authentification {
         }
     }
 
-    public function verifLoginPassword($login, $password) {
+    public function verifLoginPassword(String $login, String $password): void {
         try {
             $password = sha1($password);
             $requete = "SELECT id_login, id_employe FROM login WHERE login = :identifiant AND mdp = :mdp";

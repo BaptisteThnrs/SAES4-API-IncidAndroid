@@ -56,8 +56,12 @@ class Api {
                     }
                     break;
                 case 'tousIncidents':
-                    $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
-                    $this->donnees->getIncident();
+                    if (!empty($url[1])) {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
+                        $this->donnees->getIncident($url[1]);
+                    } else {
+                        $this->sendError("Employe non trouvée", 404);
+                    }
                     break;
                 case 'incidentUneReservation':
                     if (!empty($url[1])) {

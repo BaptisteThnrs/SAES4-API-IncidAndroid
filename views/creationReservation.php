@@ -23,10 +23,6 @@
     $numTel =           isset($_POST['numTel'])         ? htmlspecialchars($_POST['numTel']) : '';
     $precisActivite =   isset($_POST['precisActivite']) ? htmlspecialchars($_POST['precisActivite']) : '';
 
-    // Tableau pour stocker les erreurs
-    $erreurs = [];
-    $messageSucces = $messageErreur = "";
-
     // Validation des champs
     if ($nomSalle == '') {
         $erreurs['nomSalle'] = "Le nom de la salle est obligatoire.";
@@ -43,17 +39,6 @@
     if ($heureFin == '') {
         $erreurs['heureFin'] = "L'heure de fin est obligatoire.";
     }
-
-    // // Si aucun champ n'a d'erreur, on tente l'insertion
-    // if (empty($erreurs)) {
-    //     try {
-    //         // Appel à la fonction pour insérer la réservation
-    //         insertionReservation($nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin);
-    //         $messageSucces = "Votre réservation a été effectuée avec succès!";
-    //     } catch (PDOException $e) {
-    //         $messageErreur = "Une erreur est survenue lors de la réservation.";
-    //     }
-    // }
 
     /*
      * Structuration des réservations par salle et par date
@@ -101,36 +86,13 @@
     <body>
         <div class="container-fluid">
             <!-- Header de la page -->
-            <?php include '../include/header.php'; ?>
+            <?php include __DIR__ . '/../include/header.php'; ?>
 
             <div class="full-screen">
                 <!-- Contenu de la page -->
                 <div class="row text-center padding-header">
                     <h1>Réservez votre salle</h1>
                 </div>
-                <br>
-
-                <!-- Affichage des erreurs -->
-                <?php if ($messageErreur): ?>
-                    <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="alert alert-danger">
-                                <?= $messageErreur ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Affichage du message de succès -->
-                <?php if ($messageSucces): ?>
-                    <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="alert alert-success">
-                                <?= $messageSucces ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
                 <br>
                 <form method="post" action="../indexReservation.php">
                     <input type="hidden" name="controller" value="CreationReservation">
@@ -195,8 +157,8 @@
 
                                                     for ($heure = $heureDebutPossible; $heure < $heureFinPossible; $heure++) {
                                                         for ($minute = 0; $minute < 60; $minute += 10) {
-                                                            $heureFormatee = str_pad($heure, 2, '0', STR_PAD_LEFT);
-                                                            $minuteFormatee = str_pad($minute, 2, '0', STR_PAD_LEFT);
+                                                            $heureFormatee = str_pad((string)$heure, 2, '0', STR_PAD_LEFT);
+                                                            $minuteFormatee = str_pad((string)$minute, 2, '0', STR_PAD_LEFT);
                                                             echo "<option value=\"$heureFormatee:$minuteFormatee\">$heureFormatee:$minuteFormatee</option>\n";
                                                         }
                                                     }
@@ -219,8 +181,8 @@
                                                 <?php
                                                     for ($heure = $heureDebutPossible; $heure < $heureFinPossible; $heure++) {
                                                         for ($minute = 0; $minute < 60; $minute += 10) {
-                                                            $heureFormatee = str_pad($heure, 2, '0', STR_PAD_LEFT);
-                                                            $minuteFormatee = str_pad($minute, 2, '0', STR_PAD_LEFT);
+                                                            $heureFormatee = str_pad((string)$heure, 2, '0', STR_PAD_LEFT);
+                                                            $minuteFormatee = str_pad((string)$minute, 2, '0', STR_PAD_LEFT);
                                                             echo "<option value=\"$heureFormatee:$minuteFormatee\">$heureFormatee:$minuteFormatee</option>\n";
                                                         }
                                                     }
@@ -301,12 +263,12 @@
                 </div>
             </div>
             <!-- Footer de la page -->
-            <?php include '../include/footer.php'; ?>
+            <?php include __DIR__ . '/../include/footer.php'; ?>
         </div>
         <!-- JavaScript pour les formulaires dynamique -->
         <script id="data-reservations" type="application/json">
             <?= json_encode($reservationsParSalle, JSON_HEX_TAG); ?>
         </script>
-        <script src="formulaireCreationReservation.js" defer></script>
+        <script src="/views/formulaireCreationReservation.js" defer></script>
     </body>
 </html>

@@ -7,8 +7,8 @@ function connecteBD(): PDO {
      * - Si vous devez connecter une autre base de données, modifiez directement les variables
      *   `$host`, `$user`, `$pass`, et éventuellement `$db` pour refléter vos paramètres de connexion (à partir de ligne 54).
      */
-//    $hostAUtiliser = 'local';                    // local
-    $hostAUtiliser = 'docker';                    // docker
+    $hostAUtiliser = 'local';                    // local
+    //$hostAUtiliser = 'docker';                    // docker
     //$hostAUtiliser = 'distant';                  // base de donnée distante
 
     if ($hostAUtiliser == 'local') {

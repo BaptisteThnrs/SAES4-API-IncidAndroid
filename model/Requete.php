@@ -9,7 +9,7 @@ use PDOException;
 class Requete
 {
     // Fonction pour insérer une réservation
-    public function insertionReservation(PDO $pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $idLogin) {
+    public function insertionReservation(PDO $pdo, String $nomSalle, String $nomActivite, String $date, String $heureDebut, String $heureFin, String $objet, String $nom, String $prenom, String $numTel, String $precisActivite, int $idLogin): mixed {
         try {
             // Récupère le dernier identifiant de la table 'reservation'
             $sqlLastId = "SELECT id_reservation FROM reservation ORDER BY id_reservation DESC LIMIT 1";
@@ -22,11 +22,11 @@ class Requete
                 $idReservation = 'R000001';
             } else {
                 // Extrait la partie numérique et l'incrémenter
-                $partieNumerique = (int)substr($lastId, 1); // Extrait la partie numérique de l'ID
+                $partieNumerique = (int)substr((string)$lastId, 1); // Extrait la partie numérique de l'ID
                 $nouvellePartieNumerique = $partieNumerique + 1;
 
                 // Formate le nouvel identifiant en "R000001"
-                $idReservation = 'R' . str_pad($nouvellePartieNumerique, 6, '0', STR_PAD_LEFT);
+                $idReservation = 'R' . str_pad((string)$nouvellePartieNumerique, 6, '0', STR_PAD_LEFT);
             }
 
             // Récupère l'identifiant de la salle
@@ -116,6 +116,10 @@ class Requete
         }
     }
 
+    /**
+	 * Récupère la liste des activités distinctes
+	 * @return string[] Liste des noms d'activités
+	 */
     public function listeActivites(PDO $pdo): array
     {
         $tableauRetour = array();
@@ -128,13 +132,16 @@ class Requete
                 }
             }
             return $tableauRetour;
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             // Erreur de BD
             throw new PDOException($e->getMessage(), $e->getCode());
         }
     }
 
-
+    /**
+	 * Récupère la liste des salles
+	 * @return string[] Liste des noms des salles
+	 */
     public function listeSalles(PDO $pdo): array
     {
         $tableauRetour = array();
@@ -147,14 +154,14 @@ class Requete
                 }
             }
             return $tableauRetour;
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             // Erreur de BD
             throw new PDOException($e->getMessage(), $e->getCode());
         }
     }
 
 
-    public function verif_session(): PDOStatement 
+    public function verif_session(): void 
     {
         // Si la session n'existe plus, on redirige vers la page de connexion
         if (!isset($_SESSION['id'])) {
@@ -163,7 +170,11 @@ class Requete
         }
     }
 
-    function affichageReservation(PDO $pdo) 
+    /**
+	 * Récupère la liste des réservations
+	 * @return string[] Liste des réservations
+	 */
+    function affichageReservation(PDO $pdo): array
     {
         $requete = "SELECT reservation.id_reservation as id_reservation, salle.nom as nom_salle, employe.nom as nom_employe,
                     employe.prenom as prenom_employe, activite.nom_activite as nom_activite, reservation.date_reservation 
