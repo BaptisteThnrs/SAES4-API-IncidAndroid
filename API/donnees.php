@@ -163,6 +163,24 @@ class Donnees {
         }
     }
 
+    public function getInfoUnIncidentModif(String $idIncident): void {
+        try {
+            $maRequete = 'SELECT resume, description, service_technique, intitule
+                          FROM incident
+                          JOIN gravite ON incident.id_gravite = gravite.id_gravite
+                          WHERE incident.id_incident = :idIncident';
+
+            $stmt = $this->pdo->prepare($maRequete);
+            $stmt->bindParam(":idIncident", $idIncident, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $incident = $stmt->fetchAll();
+            sendJSON($incident, 200);
+        } catch (PDOException $e) {
+            sendError($e->getMessage(), 500);
+        }
+    }
+
     public function getToutesGravite(): void {
         try {
             $maRequete = 'SELECT intitule, id_gravite

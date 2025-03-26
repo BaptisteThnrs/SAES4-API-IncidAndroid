@@ -79,6 +79,14 @@ class Api {
                         sendError("Incident non trouvé", 404);
                     }
                     break;
+                case 'infoUnIncidentModif':
+                    if (!empty($url[1])) {
+                        $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
+                        $this->donnees->getInfoUnIncidentModif($url[1]);
+                    } else {
+                        sendError("Incident non trouvé", 404);
+                    }
+                    break;
                 case 'toutesGravites':
                     $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                     $this->donnees->getToutesGravite();
