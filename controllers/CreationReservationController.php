@@ -7,6 +7,9 @@ use yasmf\HttpHelper;
 use yasmf\View;
 use yasmf\Controller;
 use model\Requete;
+require __DIR__ . '/../fonction/connexion.php';
+
+session_start();
 
 class CreationReservationController {
 
@@ -44,7 +47,7 @@ class CreationReservationController {
         $numTel = HttpHelper::getParam('numTel');
         $precisActivite = HttpHelper::getParam('precisActivite');
         
-        $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, 1); //TODO changer 1 par id de l'employe
+        $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $_SESSION['id']);
         $tabSalles = $this->requete->listeSalles($pdo);
         $tabActivites = $this->requete->listeActivites($pdo);
         $tabReservation = $this->requete->affichageReservation($pdo);

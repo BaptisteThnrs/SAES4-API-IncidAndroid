@@ -9,7 +9,7 @@ use PDOException;
 class Requete
 {
     // Fonction pour insérer une réservation
-    public function insertionReservation(PDO $pdo, String $nomSalle, String $nomActivite, String $date, String $heureDebut, String $heureFin, String $objet, String $nom, String $prenom, String $numTel, String $precisActivite, int $idLogin): mixed {
+    public function insertionReservation(PDO $pdo, String $nomSalle, String $nomActivite, String $date, String $heureDebut, String $heureFin, String $objet, String $nom, String $prenom, String $numTel, String $precisActivite, String $idLogin): mixed {
         try {
             // Récupère le dernier identifiant de la table 'reservation'
             $sqlLastId = "SELECT id_reservation FROM reservation ORDER BY id_reservation DESC LIMIT 1";
