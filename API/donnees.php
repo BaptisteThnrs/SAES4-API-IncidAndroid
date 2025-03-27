@@ -161,7 +161,7 @@ class Donnees {
 
     public function getInfoUnIncidentModif(String $idIncident): void {
         try {
-            $maRequete = 'SELECT resume, description, service_technique, intitule
+            $maRequete = 'SELECT resume, description, service_technique, incident.id_gravite
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           WHERE incident.id_incident = :idIncident';
