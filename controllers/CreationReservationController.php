@@ -36,16 +36,16 @@ class CreationReservationController {
     }
 
     public function ajoutReservation(PDO $pdo): view {
-        $nomSalle = HttpHelper::getParam('nomSalle');
-        $nomActivite = HttpHelper::getParam('nomActivite');
-        $date = HttpHelper::getParam('date');
-        $heureDebut = HttpHelper::getParam('heureDebut');
-        $heureFin = HttpHelper::getParam('heureFin');
-        $objet = HttpHelper::getParam('objet');
-        $nom = HttpHelper::getParam('nom');
-        $prenom = HttpHelper::getParam('prenom');
-        $numTel = HttpHelper::getParam('numTel');
-        $precisActivite = HttpHelper::getParam('precisActivite');
+        $nomSalle = HttpHelper::getParam('nomSalle') ?? '';
+        $nomActivite = HttpHelper::getParam('nomActivite') ?? '';
+        $date = HttpHelper::getParam('date') ?? '';
+        $heureDebut = HttpHelper::getParam('heureDebut') ?? '';
+        $heureFin = HttpHelper::getParam('heureFin') ?? '';
+        $objet = HttpHelper::getParam('objet') ?? '';
+        $nom = HttpHelper::getParam('nom') ?? '';
+        $prenom = HttpHelper::getParam('prenom') ?? '';
+        $numTel = HttpHelper::getParam('numTel') ?? '';
+        $precisActivite = HttpHelper::getParam('precisActivite') ?? '';
         
         $this->requete->insertionReservation($pdo, $nomSalle, $nomActivite, $date, $heureDebut, $heureFin, $objet, $nom, $prenom, $numTel, $precisActivite, $_SESSION['id']);
         $tabSalles = $this->requete->listeSalles($pdo);
