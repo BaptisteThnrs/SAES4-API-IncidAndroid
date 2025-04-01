@@ -1,11 +1,7 @@
 <?php
     $startTime = microtime(true); // temps de chargement de la page
-    require __DIR__ . '/../fonction/connexion.php';
 
-    session_start();
     verif_session();
-
-    $idLogin = $_SESSION['id'];
 
     $tabSalles = $listeSalles;
     $tabActivites = $listeActivites;
@@ -94,6 +90,7 @@
                     <h1>Réservez votre salle</h1>
                 </div>
                 <br>
+                <?php echo $_SESSION['id'] ?>
                 <form method="post" action="../indexReservation.php">
                     <input type="hidden" name="controller" value="CreationReservation">
                     <input type="hidden" name="action" value="ajoutReservation">
