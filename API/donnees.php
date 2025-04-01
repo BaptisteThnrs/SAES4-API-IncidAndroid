@@ -20,7 +20,7 @@ class Donnees {
             FROM reservation
             JOIN salle ON reservation.id_salle = salle.id_salle
             JOIN activite ON reservation.id_activite = activite.id_activite
-            WHERE reservation.id_employe = :id_employe';
+            WHERE reservation.id_employe = :id_employe AND reservation.date_reservation >= CURDATE()';
 
             $stmt = $this->pdo->prepare($maRequete);
             $stmt->bindValue(':id_employe', $idEmploye, PDO::PARAM_INT);
