@@ -41,8 +41,7 @@ class Donnees {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
                                  reservation.heure_debut, reservation.heure_fin, salle.nom,
-                                 incident.date_signalement, incident.heure_signalement, incident.id_employe,
-                                 gravite.id_gravite
+                                 incident.date_signalement, incident.heure_signalement, incident.id_employe
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           JOIN reservation ON incident.id_reservation = reservation.id_reservation
