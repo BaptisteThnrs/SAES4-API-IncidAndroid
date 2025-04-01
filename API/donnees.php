@@ -13,15 +13,12 @@ class Donnees {
             $maRequete = '
             SELECT reservation.id_reservation AS id_reservation,
                    salle.nom AS nom_salle,
-                   employe.nom AS nom_employe,
-                   employe.prenom AS prenom_employe,
                    activite.nom_activite AS nom_activite,
                    reservation.date_reservation AS date,
                    reservation.heure_debut AS heure_debut,
                    reservation.heure_fin AS heure_fin
             FROM reservation
             JOIN salle ON reservation.id_salle = salle.id_salle
-            JOIN employe ON reservation.id_employe = employe.id_employe
             JOIN activite ON reservation.id_activite = activite.id_activite
             WHERE reservation.id_employe = :id_employe';
 
@@ -38,14 +35,11 @@ class Donnees {
 
     public function getIncident($idEmploye): void {
         try {
-            $maRequete = 'SELECT id_incident, resume, description, service_technique,
-                                 incident.id_reservation, intitule, reservation.date_reservation,
-                                 reservation.heure_debut, reservation.heure_fin, salle.nom,
-                                 incident.date_signalement, incident.heure_signalement, incident.id_employe
+            $maRequete = 'SELECT id_incident, resume, service_technique,
+                                 incident.id_reservation, gravite.intitule,
+                                 incident.date_signalement
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
-                          JOIN reservation ON incident.id_reservation = reservation.id_reservation
-                          JOIN salle ON reservation.id_salle = salle.id_salle
                           WHERE incident.id_employe = :idEmploye';
 
             $stmt = $this->pdo->prepare($maRequete);
@@ -96,8 +90,8 @@ class Donnees {
             && !empty($donneesJson['ID_RESERVATION'])
             && !empty($donneesJson['ID_EMPLOYE'])) {
             try {
-                $maRequete = 'INSERT INTO incident (RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, ID_EMPLOYE, DATE_SIGNALEMENT, HEURE_SIGNALEMENT) 
-                              VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, :ID_EMPLOYE, CURDATE(), CURTIME())';
+                $maRequete = 'INSERT INTO incident (RESUME, DESCRIPTION, SERVICE_TECHNIQUE, ID_GRAVITE, ID_RESERVATION, ID_EMPLOYE, DATE_SIGNALEMENT) 
+                              VALUES (:RESUME, :DESCRIPTION, :SERVICE_TECHNIQUE, :ID_GRAVITE, :ID_RESERVATION, :ID_EMPLOYE, CURRENT_TIMESTAMP())';
 
                 $stmt = $this->pdo->prepare($maRequete);
                 $stmt->bindParam(":RESUME", $donneesJson['RESUME']);
@@ -120,7 +114,7 @@ class Donnees {
     public function getIncidentPourUneReservation(String $idReservation): void {
         try {
             $maRequete = 'SELECT id_incident, resume, gravite.intitule, service_technique,
-                                 date_signalement, heure_signalement
+                                 date_signalement
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           WHERE incident.id_reservation = :reservation';
@@ -141,7 +135,7 @@ class Donnees {
             $maRequete = 'SELECT id_incident, resume, description, service_technique,
                                  incident.id_reservation, intitule, reservation.date_reservation,
                                  reservation.heure_debut, reservation.heure_fin, salle.nom,
-                                 incident.date_signalement, incident.heure_signalement
+                                 incident.date_signalement 
                           FROM incident
                           JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           JOIN reservation ON incident.id_reservation = reservation.id_reservation
