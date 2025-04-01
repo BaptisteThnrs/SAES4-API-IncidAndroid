@@ -132,13 +132,12 @@ class Donnees {
 
     public function getInfoUnIncident(String $idIncident): void {
         try {
-            $maRequete = 'SELECT id_incident, resume, description, service_technique,
-                                 incident.id_reservation, intitule, reservation.date_reservation,
-                                 reservation.heure_debut, reservation.heure_fin, salle.nom,
-                                 incident.date_signalement 
+            $maRequete = 'SELECT incident.id_reservation, incident.description,
+                                 reservation.date_reservation, reservation.heure_debut,
+                                 reservation.heure_fin, salle.nom AS nom_salle, activite.nom_activite
                           FROM incident
-                          JOIN gravite ON incident.id_gravite = gravite.id_gravite
                           JOIN reservation ON incident.id_reservation = reservation.id_reservation
+                          JOIN activite ON reservation.id_activite = activite.id_activite
                           JOIN salle ON reservation.id_salle = salle.id_salle
                           WHERE incident.id_incident = :idIncident';
 
@@ -146,7 +145,7 @@ class Donnees {
             $stmt->bindParam(":idIncident", $idIncident, PDO::PARAM_INT);
             $stmt->execute();
 
-            $incident = $stmt->fetchAll();
+            $incident = $stmt->fetch(PDO::FETCH_ASSOC);
             sendJSON($incident, 200);
         } catch (PDOException $e) {
             sendError($e->getMessage(), 500);
