@@ -60,7 +60,7 @@ class Api {
                         $this->authentification->authentification(); // Test si on est bien authenfifié pour l'API
                         $this->donnees->getIncident($url[1]);
                     } else {
-                        $this->sendError("Employe non trouvée", 404);
+                        sendError("Employe non trouvée", 404);
                     }
                     break;
                 case 'incidentUneReservation':
